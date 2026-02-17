@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wanderlust-deployment
+  labels: 
+    app: wanderlust
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wanderlust
+  template:
+    metadata:
+      labels:
+        app: wanderlust
+    spec:
+      containers:
+      - name: wanderlust-app
+        image: sunil7chinta/wanderlust-app
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - secretRef:
+            name: wanderlust-env-secret
+          
+        
+
+
