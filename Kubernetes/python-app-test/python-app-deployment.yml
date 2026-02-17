@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app-deployment
+  labels:
+    app: python-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      containers:
+      - name: python-app-container
+        image: python-app:latest
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: db-conn
+          mountPath: /opt
+          readOnly: true
+        env: 
+        - name: DB-PORT
+          valueFrom:
+            configMapKeyRef:
+              name: test-cm
+              key: db-port
+        - name: DB-USER
+          valueFrom:
+            secretKeyRef:
+              name: test-secret
+              key: db-user
+        ports:
+        - containerPort: 8000
+      volumes:
+        - name: db-conn
+          secret:
+            secretName: test-secret
+                                                                                                                      
